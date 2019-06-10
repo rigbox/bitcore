@@ -201,6 +201,14 @@ export class InternalStateProvider implements CSP.IChainStateService {
     }
   }
 
+  async getRawTransaction(params: CSP.StreamRawTransactionParams) {
+    const { chain, network, txId ,blockHash} = params;
+    if (typeof txId !== 'string' || !chain || !network) {
+      throw 'Missing required param';
+    }
+    return  this.getRPC(chain, network).getRawTransaction(txId,blockHash);
+  }
+  
   async getAuthhead(params: CSP.StreamTransactionParams) {
     let { chain, network, txId } = params;
     if (typeof txId !== 'string') {

@@ -82,6 +82,10 @@ export declare namespace CSP {
   export type StreamTransactionParams = ChainNetwork & {
     txId: string;
   };
+  export type StreamRawTransactionParams = ChainNetwork & {
+    txId: string;
+    blockHash: string;
+  };
   export type StreamWalletAddressesParams = ChainNetwork & {
     walletId: ObjectId;
     req: Request;
@@ -147,6 +151,7 @@ export declare namespace CSP {
     getCoinsForTx(params: { chain: string; network: string; txid: string }): Promise<CoinListingJSON>;
     getLocalTip(params): Promise<IBlock | null>;
     getLocatorHashes(params): Promise<any>;
+    getRawTransaction(params: StreamTransactionParams):any;
   }
 
   type ChainStateServices = { [key: string]: IChainStateService };

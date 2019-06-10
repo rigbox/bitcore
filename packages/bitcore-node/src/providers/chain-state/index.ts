@@ -4,12 +4,16 @@ import { ETHStateProvider } from './eth/eth';
 import { BATStateProvider } from './erc20/tokens/bat';
 import { CSP } from '../../types/namespaces/ChainStateProvider';
 import { Chain } from '../../types/ChainNetwork';
+import { LTCStateProvider } from './ltc/ltc';
+import { BSVStateProvider } from './bsv/bsv';
 
 const services: CSP.ChainStateServices = {
   BTC: new BTCStateProvider(),
   BCH: new BCHStateProvider(),
   ETH: new ETHStateProvider(),
-  BAT: new BATStateProvider()
+  BAT: new BATStateProvider(),
+  LTC: new LTCStateProvider(),
+  BSV: new BSVStateProvider()
 };
 
 class ChainStateProxy implements CSP.ChainStateProvider {
@@ -54,6 +58,10 @@ class ChainStateProxy implements CSP.ChainStateProvider {
 
   getTransaction(params: CSP.StreamTransactionParams) {
     return this.get(params).getTransaction(params);
+  }
+
+  getRawTransaction(params: CSP.StreamRawTransactionParams) {
+    return this.get(params).getRawTransaction(params);
   }
 
   async createWallet(params: CSP.CreateWalletParams) {

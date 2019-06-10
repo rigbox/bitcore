@@ -90,19 +90,24 @@ export class BlockModel extends BaseModel<IBlock> {
       );
       logger.debug('Updating previous block.nextBlockHash ', convertedBlock.hash);
     }
-
-    await TransactionStorage.batchImport({
-      txs: block.transactions,
-      blockHash: convertedBlock.hash,
-      blockTime: new Date(time),
-      blockTimeNormalized: new Date(timeNormalized),
-      height: height,
-      chain,
-      network,
-      parentChain,
-      forkHeight,
-      initialSyncComplete
-    });
+    logger.info(chain+", Block Transaction Count>>>",block.transactions.length);
+    for(var num=0;num< Math.ceil(block.transactions.length/2000);num++) {
+        var start = num * 2000;
+        var end = start + 2000;
+        logger.info(chain+": "+start+">>>>"+end);
+        await TransactionStorage.batchImport({
+          txs: block.transactions.slice(start,end),
+          blockHash: convertedBlock.hash,
+          blockTime: new Date(time),
+          blockTimeNormalized: new Date(timeNormalized),
+          height: height,
+          chain,
+          network,
+          parentChain,
+          forkHeight,
+          initialSyncComplete
+        });
+    }
 
     if (initialSyncComplete) {
       EventStorage.signalBlock(convertedBlock);

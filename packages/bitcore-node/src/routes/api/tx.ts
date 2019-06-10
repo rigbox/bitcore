@@ -57,6 +57,29 @@ router.get('/:txId', async (req, res) => {
   }
 });
 
+router.get('/:txId/block/:blockHash', async (req, res) => {
+  let { chain, network, txId, blockHash } = req.params;
+  if (typeof txId !== 'string' || !chain || !network) {
+    return res.status(400).send('Missing required param');
+  }
+  chain = chain.toUpperCase();
+  network = network.toLowerCase();
+  try {
+    const tx = await ChainStateProvider.getRawTransaction({ chain, network, txId, blockHash });
+    if (!tx) {
+      return res.status(404).send(`The requested txid ${txId} could not be found.`);
+    } else {
+      const tip = await ChainStateProvider.getLocalTip({ chain, network });
+      if (tx && tip.height - (<TransactionJSON>tx).blockHeight > 100) {
+        SetCache(res, CacheTimes.Month);
+      }
+      return res.send(tx);
+    }
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+});
+
 router.get('/:txId/authhead', async (req, res) => {
   let { chain, network, txId } = req.params;
   if (typeof txId !== 'string' || !chain || !network) {
@@ -92,10 +115,10 @@ router.get('/:txid/coins', (req, res, next) => {
   }
 });
 
-router.post('/send', async function(req, res) {
+router.get('/send/:rawTx', async function(req, res) {
   try {
-    let { chain, network } = req.params;
-    let { rawTx } = req.body;
+    let { chain, network, rawTx } = req.params;
+    //let { rawTx } = req.body;
     chain = chain.toUpperCase();
     network = network.toLowerCase();
     let txid = await ChainStateProvider.broadcastTransaction({

@@ -109,9 +109,21 @@ export class RPC {
     return this.asyncCall('estimatesmartfee', [target]);
   }
 
+  async getBsvEstimateFee(target: number) {
+    return this.asyncCall('estimatefee', [target]);
+  }
+
   async getEstimateFee() {
     return this.asyncCall('estimatefee', []);
   }
+
+  getRawTransaction(txid: string, blockhash: string) {
+    if(blockhash.length<10) {
+      return this.asyncCall('getrawtransaction', [txid, true]);
+    }
+    return this.asyncCall('getrawtransaction', [txid, true, blockhash]);
+  }
+
 }
 
 @LoggifyClass
