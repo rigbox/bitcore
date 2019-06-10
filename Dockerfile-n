@@ -4,6 +4,7 @@ WORKDIR /usr/src/bitcore
 COPY . /usr/src/bitcore
 
 RUN npm install -g cnpm
+
 RUN cnpm install
 
 EXPOSE 3000
