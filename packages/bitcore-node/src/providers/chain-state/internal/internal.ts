@@ -43,7 +43,9 @@ export class InternalStateProvider implements CSP.IChainStateService {
     const query = { chain: chain, network: network.toLowerCase()} as any;
     query.$or = [];
     address.split(',').map(function(val){
-      query.$or.push({ address: val });
+      if(val as string) {
+        query.$or.push({ address: val });
+      }
     });
     if (args.unspent) {
       query.spentHeight = { $lt: SpentHeightIndicators.minimum };
@@ -70,10 +72,15 @@ export class InternalStateProvider implements CSP.IChainStateService {
     const query = {
       chain,
       network,
-      address,
       spentHeight: { $lt: SpentHeightIndicators.minimum },
       mintHeight: { $gt: SpentHeightIndicators.conflicting }
-    };
+    } as any;
+    query.$or = [];
+    address.split(',').map(function(val){
+      if(val as string) {
+        query.$or.push({ address: val });
+      }
+    });
     let balance = await CoinStorage.getBalance({ query });
     return balance;
   }
