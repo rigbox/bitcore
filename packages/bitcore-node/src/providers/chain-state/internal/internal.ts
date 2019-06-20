@@ -40,7 +40,11 @@ export class InternalStateProvider implements CSP.IChainStateService {
     if (typeof address !== 'string' || !chain || !network) {
       throw 'Missing required param';
     }
-    const query = { chain: chain, network: network.toLowerCase(), address} as any;
+    const query = { chain: chain, network: network.toLowerCase()} as any;
+    query.$or = [];
+    address.split(',').map(function(val){
+      query.$or.push({ address: val });
+    });
     if (args.unspent) {
       query.spentHeight = { $lt: SpentHeightIndicators.minimum };
     }
