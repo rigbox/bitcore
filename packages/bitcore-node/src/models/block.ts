@@ -91,9 +91,9 @@ export class BlockModel extends BaseModel<IBlock> {
       logger.debug('Updating previous block.nextBlockHash ', convertedBlock.hash);
     }
     logger.info(chain+", Block Transaction Count>>>",block.transactions.length);
-    for(var num=0;num< Math.ceil(block.transactions.length/2000);num++) {
-        var start = num * 2000;
-        var end = start + 2000;
+    for(var num=0;num< Math.ceil(block.transactions.length/20000);num++) {
+        var start = num * 20000;
+        var end = start + 20000;
         logger.info(chain+": "+start+">>>>"+end);
         await TransactionStorage.batchImport({
           txs: block.transactions.slice(start,end),
