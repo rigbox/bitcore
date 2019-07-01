@@ -8,6 +8,6 @@ export class BSVStateProvider extends BTCStateProvider {
 
   async getFee(params: CSP.GetEstimateSmartFeeParams) {
     const { chain, network, target } = params;
-    return { feerate: await this.getRPC(chain, network).getBsvEstimateFee(target) };
+    return { feerate: await this.getRPC(chain, network).getBsvEstimateFee(Number(target)) };
   }
 }
