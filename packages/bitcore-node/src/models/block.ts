@@ -91,11 +91,12 @@ export class BlockModel extends BaseModel<IBlock> {
       logger.debug('Updating previous block.nextBlockHash ', convertedBlock.hash);
     }
     logger.info(chain+", Block Transaction Count>>>",block.transactions.length);
+    let tempTrans;
     for(var num=0;num< Math.ceil(block.transactions.length/20000);num++) {
         var start = num * 20000;
         var end = start + 20000;
         logger.info(chain+": "+start+">>>>"+end);
-        let tempTrans = block.transactions.slice(start,end);
+        tempTrans = block.transactions.slice(start,end);
         await TransactionStorage.batchImport({
           txs: tempTrans,
           blockHash: convertedBlock.hash,
@@ -108,7 +109,9 @@ export class BlockModel extends BaseModel<IBlock> {
           forkHeight,
           initialSyncComplete
         });
+        tempTrans = null;
     }
+    tempTrans = null;
     if (initialSyncComplete) {
       EventStorage.signalBlock(convertedBlock);
     }
