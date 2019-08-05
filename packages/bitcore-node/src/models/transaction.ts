@@ -133,7 +133,7 @@ export class TransactionModel extends BaseModel<ITransaction> {
       initialSyncComplete: params.initialSyncComplete,
       spendOps
     });
-
+    
     logger.debug('Minting Coins', mintOps.length);
     if (mintOps.length) {
       await Promise.all(
@@ -176,6 +176,8 @@ export class TransactionModel extends BaseModel<ITransaction> {
         })
       );
     }
+    //free memory
+    params.txs = [];
   }
 
   async addTransactions(params: {

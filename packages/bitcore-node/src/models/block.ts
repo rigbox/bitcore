@@ -109,9 +109,9 @@ export class BlockModel extends BaseModel<IBlock> {
           forkHeight,
           initialSyncComplete
         });
-        tempTrans = null;
+        tempTrans = [null];
     }
-    tempTrans = null;
+    tempTrans = [null];
     if (initialSyncComplete) {
       EventStorage.signalBlock(convertedBlock);
     }
